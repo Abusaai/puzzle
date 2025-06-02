@@ -1,0 +1,154 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Phase Three – The Final Step</title>
+  <style>
+    body {
+      background-color: #0c0c0c;
+      color: #f4f4f4;
+      font-family: 'Courier New', Courier, monospace;
+      text-align: center;
+      padding: 40px 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background-color: #1a1a1a;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px #000000aa;
+    }
+    h1 {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+    .text-block {
+      text-align: left;
+      line-height: 1.8;
+      font-size: 18px;
+      margin-bottom: 30px;
+    }
+    .timer {
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: #ffcc00;
+    }
+    input {
+      padding: 10px;
+      font-size: 16px;
+      width: 300px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    .error {
+      color: orange;
+      margin-top: 10px;
+    }
+    .locked {
+      color: red;
+      margin-top: 15px;
+      display: none;
+    }
+    .final-message {
+      color: lightgreen;
+      margin-top: 30px;
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Phase Three – The Final Step</h1>
+    <div class="text-block">
+      Winds guide the longships through fates untold.<br>
+honor binds the <span style="color:blue; font-weight:bold;">shield</span> wall with silent resolve.<br>
+all warriors bleed before they rise.<br>
+the sword remembers no mercy.<br>
+he who fears death has died already.<br>
+a promise broken can never be reforged.<br>
+storms do not ask permission to come.<br>
+to feast, one must first <span style="color:green; font-weight:bold;">hunt</span> in the <span style="color:green; font-weight:bold;">forest</span>.<br>
+only the brave taste the <span style="color:yellow; font-weight:bold;">gold</span> and mead of <span style="color:yellow; font-weight:bold;">glory</span>.<br>
+<span style="color:red; font-weight:bold;">blood</span> answers <span style="color:red; font-weight:bold;">blood</span>.<br>
+even kings kneel before steel.<br>
+brotherhood is forged, not given.<br>
+rivers remember fallen oars.<br>
+one <span style="color:blue; font-weight:bold;">shield</span> is no army.<br>
+kin is tested when swords are drawn.<br>
+every axe tells a story.<br>
+northern winds never lie.<br>
+before the end, stand tall.<br>
+every path leads home.<br>
+fury grants no second chance.<br>
+only the gods know who falls.<br>
+<span style="color:red; font-weight:bold;">rage</span> fades, but names remain.<br>
+even shadows fear the sun.<br>
+your blade speaks when words fail.<br>
+only fools forget oaths.<br>
+unseen wounds cut deepest.<br>
+strength is not silence, but control.<br>
+echoes never lie.<br>
+<span style="color:blue; font-weight:bold;">ice</span> breaks even the strongest <span style="color:blue; font-weight:bold;">shield</span>.<br>
+time remembers.
+    </div>
+    <div class="timer" id="countdown">60:00</div>
+    <input type="text" id="answer" placeholder="Type your answer here">
+    <br>
+    <button onclick="checkAnswer()">Submit</button>
+    <div class="error" id="errorMsg"></div>
+    <div class="locked" id="lockMsg"></div>
+    <div class="final-message" id="finalMessage"></div>
+  </div>
+
+  <script>
+    let timeLeft = 3600;
+    let attempts = 0;
+    const maxAttempts = 5;
+    const correctAnswer = "egg";
+    const timerDisplay = document.getElementById("countdown");
+    const errorMsg = document.getElementById("errorMsg");
+    const finalMsg = document.getElementById("finalMessage");
+    const lockMsg = document.getElementById("lockMsg");
+
+    const timer = setInterval(() => {
+      if (timeLeft > 0) {
+        timeLeft--;
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        timerDisplay.textContent = minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+      } else {
+        clearInterval(timer);
+        lockMsg.textContent = "⏳ Time is up! The challenge is now locked.";
+        lockMsg.style.display = "block";
+        document.querySelector("input").disabled = true;
+        document.querySelector("button").disabled = true;
+      }
+    }, 1000);
+
+    function checkAnswer() {
+      const input = document.getElementById("answer").value.trim().toLowerCase();
+      if (input === correctAnswer) {
+        window.location.href = "congratulations.html";
+        document.querySelector("input").disabled = true;
+        document.querySelector("button").disabled = true;
+        clearInterval(timer);
+      } else {
+        attempts++;
+        if (attempts >= maxAttempts) {
+          errorMsg.textContent = "❌ You have used all 5 attempts. The challenge is locked.";
+          document.querySelector("input").disabled = true;
+          document.querySelector("button").disabled = true;
+        } else {
+          errorMsg.textContent = "❌ Incorrect. Attempts remaining: " + (maxAttempts - attempts);
+        }
+      }
+    }
+  </script>
+</body>
+</html>
