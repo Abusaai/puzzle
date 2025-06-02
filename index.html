@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vault Access</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: white;
+      text-align: center;
+      font-family: Arial, sans-serif;
+      padding-top: 100px;
+    }
+    .timer {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+    input {
+      padding: 10px;
+      font-size: 16px;
+      width: 300px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Vault Access</h1>
+  <div class="timer" id="countdown">5:00</div>
+  <input type="text" placeholder="Enter Access Key">
+  <script>
+    let time = 300;
+    const countdown = document.getElementById("countdown");
+    const interval = setInterval(() => {
+      const minutes = Math.floor(time / 60);
+      const seconds = time % 60;
+      countdown.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+      time--;
+      if (time < 0) clearInterval(interval);
+    }, 1000);
+  </script>
+</body>
+</html>
