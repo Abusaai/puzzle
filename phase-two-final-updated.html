@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Phase Two - Vault Echo</title>
+  <style>
+    body {
+      background-color: #111;
+      color: #eee;
+      font-family: 'Courier New', Courier, monospace;
+      text-align: center;
+      padding: 50px 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background-color: #222;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 0 20px #000000aa;
+    }
+    h1 {
+      font-size: 28px;
+    }
+    .timer, .lockout, .error, .play-count {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+    input {
+      padding: 10px;
+      font-size: 16px;
+      width: 300px;
+      margin-top: 20px;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    audio {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Phase Two: Vault Echo</h1>
+    <p>The silence hides the key. Listen carefully.</p>
+    <button onclick="playAudio()" id="playBtn">▶️ Play Morse Audio</button>
+    <audio id="morseAudio">
+      <source src="morse-audio.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+    <div class="play-count" id="playCountMsg">Plays remaining: 5 / 5</div>
+    <div class="timer" id="countdown">60:00</div>
+    <div class="lockout" id="lockoutMsg" style="color: red; display: none;"></div>
+    <input type="text" id="answer" placeholder="Enter your answer">
+    <br>
+    <button onclick="checkAnswer()">Submit</button>
+    <div class="error" id="errorMsg" style="color: orange;"></div>
+  </div>
+
+  <script>
+    let totalTime = 3600; // 1 hour
+    let lockDurationAfterFail = 300; // 5 minutes
+    let lockDurationAfterTimeout = 1800; // 30 minutes
+    let attempts = 0;
+    let playsRemaining = 5;
+    let isLocked = false;
+    let audio = document.getElementById("morseAudio");
+    const correctAnswer = "mirror";
+    const countdown = document.getElementById("countdown");
+    const lockoutMsg = document.getElementById("lockoutMsg");
+    const errorMsg = document.getElementById("errorMsg");
+    const playCountMsg = document.getElementById("playCountMsg");
+    const playBtn = document.getElementById("playBtn");
+
+    const timer = setInterval(() => {
+      if (!isLocked && totalTime > 0) {
+        totalTime--;
+        updateCountdown();
+      } else if (totalTime <= 0 && !isLocked) {
+        lockout("Time's up! Audio is locked for 30 minutes.", lockDurationAfterTimeout);
+      }
+    }, 1000);
+
+    function updateCountdown() {
+      const minutes = Math.floor(totalTime / 60);
+      const seconds = totalTime % 60;
+      countdown.textContent = minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+    }
+
+    function lockout(message, duration) {
+      isLocked = true;
+      lockoutMsg.textContent = message;
+      lockoutMsg.style.display = "block";
+      playBtn.disabled = true;
+      setTimeout(() => {
+        isLocked = false;
+        lockoutMsg.style.display = "none";
+        if (playsRemaining > 0) {
+          playBtn.disabled = false;
+        }
+      }, duration * 1000);
+    }
+
+    function playAudio() {
+      if (isLocked || playsRemaining <= 0) return;
+
+      audio.currentTime = 0;
+      audio.play();
+      playsRemaining--;
+      playCountMsg.textContent = "Plays remaining: " + playsRemaining + " / 5";
+
+      if (playsRemaining <= 0) {
+        playBtn.disabled = true;
+        lockoutMsg.style.display = "block";
+        lockoutMsg.textContent = "You've used all 5 plays.";
+      }
+    }
+
+    function checkAnswer() {
+      if (isLocked) return;
+
+      const userInput = document.getElementById("answer").value.trim().toLowerCase();
+      if (userInput === correctAnswer) {
+        window.location.href = "phase-three.html";
+      } else {
+        attempts++;
+        errorMsg.textContent = "Incorrect. Try again.";
+        if (attempts >= 2) {
+          lockout("Too many failed attempts. Audio locked for 5 minutes.", lockDurationAfterFail);
+        }
+      }
+    }
+
+    updateCountdown(); // initialize display
+  </script>
+</body>
+</html>
