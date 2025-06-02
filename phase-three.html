@@ -1,0 +1,114 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Phase Three - The Final Step</title>
+  <style>
+    body {
+      background-color: #0c0c0c;
+      color: #f4f4f4;
+      font-family: 'Courier New', Courier, monospace;
+      text-align: center;
+      padding: 50px 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background-color: #1a1a1a;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 15px #000000aa;
+    }
+    h1 {
+      font-size: 26px;
+    }
+    img {
+      width: 100%;
+      max-width: 600px;
+      border: 2px solid #555;
+      margin: 20px 0;
+    }
+    .timer, .error, .locked {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+    input {
+      padding: 10px;
+      font-size: 16px;
+      width: 300px;
+      margin-top: 20px;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .final-message {
+      color: lightgreen;
+      margin-top: 30px;
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Phase Three – The Final Step</h1>
+    <p>Everything you need is already written.</p>
+    <img src="book-riddle.jpg" alt="Book Riddle Image">
+    <div class="timer" id="countdown">60:00</div>
+    <input type="text" id="answer" placeholder="Type your answer here">
+    <br>
+    <button onclick="checkAnswer()">Submit</button>
+    <div class="error" id="errorMsg" style="color: orange;"></div>
+    <div class="locked" id="lockMsg" style="color: red; display: none;"></div>
+    <div class="final-message" id="finalMessage"></div>
+  </div>
+
+  <script>
+    let timeLeft = 3600;
+    let attempts = 0;
+    const maxAttempts = 5;
+    const correctAnswer = "egg";
+    const timerDisplay = document.getElementById("countdown");
+    const errorMsg = document.getElementById("errorMsg");
+    const finalMsg = document.getElementById("finalMessage");
+    const lockMsg = document.getElementById("lockMsg");
+
+    const timer = setInterval(() => {
+      if (timeLeft > 0) {
+        timeLeft--;
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        timerDisplay.textContent = minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+      } else {
+        clearInterval(timer);
+        lockMsg.textContent = "⏳ Time is up! The challenge is now locked.";
+        lockMsg.style.display = "block";
+        document.querySelector("input").disabled = true;
+        document.querySelector("button").disabled = true;
+      }
+    }, 1000);
+
+    function checkAnswer() {
+      const input = document.getElementById("answer").value.trim().toLowerCase();
+      if (input === correctAnswer) {
+        finalMsg.innerHTML = "✅ Congratulations!<br>Take a picture of your <strong>thumb</strong> and send it to <strong>Ali</strong> via <strong>Snapchat</strong>.<br>The first to send it wins!";
+        document.querySelector("input").disabled = true;
+        document.querySelector("button").disabled = true;
+        clearInterval(timer);
+      } else {
+        attempts++;
+        if (attempts >= maxAttempts) {
+          errorMsg.textContent = "❌ You have used all 5 attempts. The challenge is locked.";
+          document.querySelector("input").disabled = true;
+          document.querySelector("button").disabled = true;
+        } else {
+          errorMsg.textContent = "❌ Incorrect. Attempts remaining: " + (maxAttempts - attempts);
+        }
+      }
+    }
+  </script>
+</body>
+</html>
